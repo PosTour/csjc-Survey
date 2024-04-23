@@ -7,6 +7,7 @@ import display.StatisticsDisplayer;
 import options.Option;
 import options.OptionParamsReceiver;
 
+import java.util.InputMismatchException;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -23,13 +24,19 @@ public class Navigator {
                 2. Получить комментарии пользователей.
                 """);
 
-        switch (scanner.nextInt()) {
-            case 1 -> displayStatsMenu();
-            case 2 -> displayCommentsMenu();
-            default -> {
-                System.out.println("Введите корректное значение");
-                displayMainMenu();
+        try {
+            switch (scanner.nextInt()) {
+                case 1 -> displayStatsMenu();
+                case 2 -> displayCommentsMenu();
+                default -> {
+                    System.out.println("Введите корректное значение");
+                    displayMainMenu();
+                }
             }
+        } catch (java.util.InputMismatchException e) {
+            System.out.println("Введите корректное значение:\n");
+            scanner.next();
+            displayMainMenu();
         }
     }
 
@@ -42,18 +49,24 @@ public class Navigator {
                 3. По способам решения проблем, одобренных пользователями.
                 """);
 
-        switch (scanner.nextInt()) {
-            case 1 -> StatisticsDisplayer.displayStats(ResultsWithCountLoader.loadCategories());
-            case 2 -> {
-                Option category = OptionParamsReceiver.receiveCategory();
-                StatisticsDisplayer.displayStats(ResultsWithCountLoader.loadProblems(category.id()));
+        try {
+            switch (scanner.nextInt()) {
+                case 1 -> StatisticsDisplayer.displayStats(ResultsWithCountLoader.loadCategories());
+                case 2 -> {
+                    Option category = OptionParamsReceiver.receiveCategory();
+                    StatisticsDisplayer.displayStats(ResultsWithCountLoader.loadProblems(category.id()));
+                }
+                case 3 -> {
+                    Option problem = OptionParamsReceiver.receiveProblem(OptionParamsReceiver.receiveCategory().id());
+                    Map<Option, Integer> resultsCount = ResultsWithCountLoader.loadSolutions(problem.id());
+                    StatisticsDisplayer.displayStats(resultsCount);
+                }
+                default -> displayStatsMenu();
             }
-            case 3 -> {
-                Option problem = OptionParamsReceiver.receiveProblem(OptionParamsReceiver.receiveCategory().id());
-                Map<Option, Integer> resultsCount = ResultsWithCountLoader.loadSolutions(problem.id());
-                StatisticsDisplayer.displayStats(resultsCount);
-            }
-            default -> displayStatsMenu();
+        } catch (java.util.InputMismatchException e) {
+            System.out.println("Введите корректное значение:\n");
+            scanner.next();
+            displayStatsMenu();
         }
     }
 
@@ -64,17 +77,23 @@ public class Navigator {
                 3. Получить комментарии пользователей по проблеме выбранной категории.
                 """);
 
-        switch (scanner.nextInt()) {
-            case 1 -> CommentsDisplayer.displayComments(CommentsLoader.loadAll());
-            case 2 -> {
-                Option category = OptionParamsReceiver.receiveCategory();
-                CommentsDisplayer.displayComments(CommentsLoader.loadByCategory(category.name()));
+        try {
+            switch (scanner.nextInt()) {
+                case 1 -> CommentsDisplayer.displayComments(CommentsLoader.loadAll());
+                case 2 -> {
+                    Option category = OptionParamsReceiver.receiveCategory();
+                    CommentsDisplayer.displayComments(CommentsLoader.loadByCategory(category.name()));
+                }
+                case 3 -> {
+                    Option problem = OptionParamsReceiver.receiveProblem(OptionParamsReceiver.receiveCategory().id());
+                    CommentsDisplayer.displayComments(CommentsLoader.loadByProblem(problem.name()));
+                }
+                default -> displayCommentsMenu();
             }
-            case 3 -> {
-                Option problem = OptionParamsReceiver.receiveProblem(OptionParamsReceiver.receiveCategory().id());
-                CommentsDisplayer.displayComments(CommentsLoader.loadByProblem(problem.name()));
-            }
-            default -> displayCommentsMenu();
+        } catch (java.util.InputMismatchException e) {
+            System.out.println("Введите корректное значение:\n");
+            scanner.next();
+            displayCommentsMenu();
         }
     }
 }

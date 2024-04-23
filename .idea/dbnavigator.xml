@@ -52,12 +52,12 @@ ORDER BY id ASC ;]]></console>
           <url-type value="DATABASE" />
           <host value="localhost" />
           <port value="5432" />
-          <database value="Survey" />
+          <database value="ba" />
           <tns-folder value="" />
           <tns-profile value="" />
           <type value="USER_PASSWORD" />
-          <user value="surveyUser" />
-          <deprecated-pwd value="c3VydmV5" />
+          <user value="baa" />
+          <deprecated-pwd value="YmFh" />
         </database>
         <properties>
           <auto-commit value="false" />

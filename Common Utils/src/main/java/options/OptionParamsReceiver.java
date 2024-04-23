@@ -1,5 +1,6 @@
 package options;
 
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -11,21 +12,21 @@ public class OptionParamsReceiver {
 
     public static Option receiveCategory() {
         List<Option> categories = OptionLoader.returnCategories();
-        System.out.println("Выберите интересующую вас категорию:");
+        System.out.println("Выберите интересующую вас категорию:\n");
 
         return returnOption(categories);
     }
 
     public static Option receiveProblem(int categoryId) {
         List<Option> problems = OptionLoader.returnProblems(categoryId);
-        System.out.println("Выберите интересующую вас проблему:");
+        System.out.println("Выберите интересующую вас проблему:\n");
 
         return returnOption(problems);
     }
 
     public static Option receiveSolution(int problemId) {
         List<Option> solutions = OptionLoader.returnSolutions(problemId);
-        System.out.println("Выберите пути решения данной проблемы, которые считаете верными::");
+        System.out.println("Выберите пути решения данной проблемы, которые считаете верными:\n");
 
         return returnOption(solutions);
     }
@@ -33,15 +34,20 @@ public class OptionParamsReceiver {
     private static Option returnOption(List<Option> options) {
         printOptions(options);
 
-        int id = scanner.nextInt();
+        try {
+            int id = scanner.nextInt();
 
-        if (id < 0 || id > options.size() + 1) {
-            System.out.println("Введите корректное значение");
-            return returnOption(options);
-        } else {
+            if (id < 0 || id > options.size()) {
+                throw new InputMismatchException();
+            }
+
             int realId = options.get(id - 1).id();
 
             return findOption(realId, options);
+        } catch (java.util.InputMismatchException e) {
+            System.out.println("Введите корректное значение:\n");
+            scanner.next();
+            return returnOption(options);
         }
     }
 

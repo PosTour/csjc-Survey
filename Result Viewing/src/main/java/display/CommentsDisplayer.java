@@ -6,6 +6,10 @@ public class CommentsDisplayer {
     private CommentsDisplayer() {}
 
     public static void displayComments(List<String> comments) {
-        comments.forEach(System.out :: println);
+        if (!comments.isEmpty()) {
+            comments.forEach(System.out :: println);
+        } else {
+            System.out.println("Пока что нет комментариев, связанных с этой категорией");
+        }
     }
 }
